@@ -16,7 +16,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
 
     catController = AnimationController(
-      duration: Duration(milliseconds: 500),
+      duration: Duration(milliseconds: 300),
       vsync: this,
     );
     
@@ -28,7 +28,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
 
     flapsController = AnimationController(
-      duration: Duration(seconds: 2),
+      duration: Duration(milliseconds: 300),
       vsync: this,
     );
     
@@ -41,7 +41,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     flapsAnimation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        flapsController.repeat();
+        flapsController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        flapsController.forward();
       }
     });
 
@@ -105,6 +107,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Widget buildLeftFlap() {
     // Positioned for making the flap "stick closer" to our box
     return Positioned(
+      left: 5.0,
+      top: 2.0,
       child: AnimatedBuilder(
         animation: flapsAnimation,
         // The cache element
