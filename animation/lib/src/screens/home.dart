@@ -9,6 +9,8 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with TickerProviderStateMixin {
   Animation<double> catAnimation;
   AnimationController catController;
+  Animation<double> flapsAnimation;
+  AnimationController flapsController;
 
   initState() {
     super.initState();
@@ -24,6 +26,26 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         curve: Curves.easeIn,
       )
     );
+
+    flapsController = AnimationController(
+      duration: Duration(seconds: 2),
+      vsync: this,
+    );
+    
+    flapsAnimation = Tween(begin: pi * 0.6, end: pi * 0.65).animate(
+      CurvedAnimation(
+        parent: flapsController,
+        curve: Curves.linear,
+      )
+    );
+
+    flapsAnimation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        flapsController.repeat();
+      }
+    });
+
+    flapsController.forward();
   }
 
   onTap() {
@@ -59,8 +81,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     return AnimatedBuilder(
       animation: catAnimation,
       builder: (context, child) {
-        // use Positioned so as to 
-        // avoid enlarging the parent Stack
+        // use Positioned so as to avoid enlarging the parent Stack
         return Positioned(
           child: child,
           top: catAnimation.value,
@@ -68,6 +89,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           left: 0.0,
         );
       },
+      // The cache element
       child: Cat(),
     );
   }
@@ -81,17 +103,23 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget buildLeftFlap() {
+    // Positioned for making the flap "stick closer" to our box
     return Positioned(
-      left: 5.0,
-      top: 2.0,
-      child: Transform.rotate(
+      child: AnimatedBuilder(
+        animation: flapsAnimation,
+        // The cache element
         child: Container(
           height: 10.0,
           width: 125.0,
           color: Colors.red,
         ),
-        angle: pi * 0.6,
-        alignment: Alignment.topLeft,
+        builder: (context, child) {          
+          return Transform.rotate(
+            child: child,
+            angle: flapsAnimation.value,
+            alignment: Alignment.topLeft,
+          );
+        },
       ),
     );
   }
