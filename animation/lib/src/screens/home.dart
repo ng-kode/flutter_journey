@@ -68,9 +68,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           child: Stack(
             overflow: Overflow.visible,
             children: <Widget>[
-              buildCatAnimation(),
+              // buildCatAnimation(),
               buildBox(),
               buildLeftFlap(),
+              buildRightFlap(),
             ],
           ),
         ),
@@ -115,13 +116,37 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Container(
           height: 10.0,
           width: 125.0,
-          color: Colors.red,
+          color: Colors.brown,
         ),
-        builder: (context, child) {          
+        builder: (context, child) {
           return Transform.rotate(
             child: child,
             angle: flapsAnimation.value,
             alignment: Alignment.topLeft,
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildRightFlap() {
+    // Positioned for making the flap "stick closer" to our box
+    return Positioned(
+      right: 5.0,
+      top: 2.0,
+      child: AnimatedBuilder(
+        animation: flapsAnimation,
+        // The cache element
+        child: Container(
+          height: 10.0,
+          width: 125.0,
+          color: Colors.red,
+        ),
+        builder: (context, child) { 
+          return Transform.rotate(
+            child: child,
+            angle: -flapsAnimation.value,
+            alignment: Alignment.topRight,
           );
         },
       ),
