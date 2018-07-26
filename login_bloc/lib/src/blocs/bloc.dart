@@ -3,8 +3,8 @@ import 'package:rxdart/rxdart.dart';
 import 'validators.dart';
 
 class Bloc extends Object with Validators {
-  final _emailCrtl = StreamController<String>.broadcast();
-  final _passwordCrtl = StreamController<String>.broadcast();
+  final _emailCrtl = BehaviorSubject<String>();
+  final _passwordCrtl = BehaviorSubject<String>();
 
   // Access to stream
   Stream<String> get email => _emailCrtl
@@ -26,6 +26,10 @@ class Bloc extends Object with Validators {
   }
 
   submit() {
-    
+    final validEmail = _emailCrtl.value;
+    final validPassword = _passwordCrtl.value;
+
+    print('validEmail is $validEmail');
+    print('validPassword is $validPassword');
   }
 }
