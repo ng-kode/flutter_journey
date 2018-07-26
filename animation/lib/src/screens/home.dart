@@ -28,7 +28,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
 
     flapsController = AnimationController(
-      duration: Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 150),
       vsync: this,
     );
     
@@ -53,8 +53,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   onTap() {
     if (catController.status == AnimationStatus.completed) {
       catController.reverse();
+      flapsController.forward();
     } else if (catController.status == AnimationStatus.dismissed) {
       catController.forward();
+      flapsController.stop();
     }
   }
 
@@ -68,7 +70,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           child: Stack(
             overflow: Overflow.visible,
             children: <Widget>[
-              // buildCatAnimation(),
+              buildCatAnimation(),
               buildBox(),
               buildLeftFlap(),
               buildRightFlap(),
@@ -140,7 +142,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Container(
           height: 10.0,
           width: 125.0,
-          color: Colors.red,
+          color: Colors.brown,
         ),
         builder: (context, child) { 
           return Transform.rotate(
