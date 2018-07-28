@@ -1,40 +1,36 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import '../bloc/stories_provider.dart';
 
-class NewsList extends StatelessWidget {
-  @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        appBar: AppBar(
-          title: Text('Top News'),
-        ),
-        body: buildList(),
-      );
-    }
 
-  Widget buildList() {
-    return ListView.builder(
-      itemCount: 1000,
-      itemBuilder: (context, int index) {
-        return FutureBuilder(
-          future: getFuture(),
-          builder: (context, snapshot) {
-            return Container(
-              height: 80.0,
-              child: snapshot.hasData
-                ? Text("I'm visible $index")
-                : Text("You can't see me $index")
-            );
-          },
-        );
-      },
+class NewsList extends StatelessWidget {  
+  Widget build(BuildContext context) {
+    final storiesBloc = StoriesProvider.of(context);
+
+    storiesBloc.fetchTopIds();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Top News'),
+      ),
+      body: buildList(storiesBloc),
     );
   }
 
-  getFuture() {
-    return Future.delayed(
-      Duration(seconds: 2),
-      () => 'hi'
+  Widget buildList(StoriesBloc storiesBloc) {
+    return StreamBuilder(
+      stream: storiesBloc.topIds,
+      builder: (context,  AsyncSnapshot<List<int>> snapshot) {
+        if (!snapshot.hasData) {
+          return Text('Still waiting on Ids');
+        }
+
+        return ListView.builder(
+          itemCount: snapshot.data.length,
+          itemBuilder: (context, int index) {
+            return Text('${snapshot.data[index]}');
+          },
+        );
+      },
     );
   }
 }
