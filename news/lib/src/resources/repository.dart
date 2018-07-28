@@ -29,7 +29,6 @@ class Repository {
 
   Future<ItemModel> fetchItem(int id) async {
     ItemModel item;
-    Source source;
 
     for (var source in sources) {
       item = await source.fetchItem(id);
