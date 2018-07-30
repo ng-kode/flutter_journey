@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../bloc/stories_provider.dart';
 import '../widget/news_list_tile.dart';
+import '../widget/refresh.dart';
 
 class NewsList extends StatelessWidget {  
   Widget build(BuildContext context) {
@@ -27,13 +28,15 @@ class NewsList extends StatelessWidget {
         }
 
         // ListView will only build widgets when they are visible
-        return ListView.builder(
-          itemCount: snapshot.data.length,
-          itemBuilder: (context, int index) {
-            storiesBloc.fetchItem(snapshot.data[index]);
+        return Refresh(
+          child: ListView.builder(
+            itemCount: snapshot.data.length,
+            itemBuilder: (context, int index) {
+              storiesBloc.fetchItem(snapshot.data[index]);
 
-            return NewsListTile(itemId: snapshot.data[index]);
-          },
+              return NewsListTile(itemId: snapshot.data[index]);
+            },
+          ),
         );
       },
     );

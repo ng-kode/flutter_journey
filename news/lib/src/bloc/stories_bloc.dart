@@ -27,6 +27,10 @@ class StoriesBloc {
     _topIds.sink.add(ids);
   }
 
+  Future clearCache() {
+    return _repo.clearCache();
+  }
+
   _itemsTransformer() {
     return ScanStreamTransformer(
       (Map<int, Future<ItemModel>> cache, int id, int counter) {
