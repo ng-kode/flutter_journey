@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
 import '../models/item_model.dart';
 import '../bloc/stories_provider.dart';
 import 'loading_container.dart';
@@ -14,22 +15,12 @@ class NewsListTile extends StatelessWidget {
 
     return StreamBuilder(
       stream: storiesBloc.items,
-      builder: (context, AsyncSnapshot<Map<int, Future<ItemModel>>> snapshot) {
-        
-        if (!snapshot.hasData) {
+      builder: (context, AsyncSnapshot<Map> snapshot) {        
+        if (!snapshot.hasData || snapshot.data[itemId] == null) {
           return LoadingContainer();
         }
 
-        return FutureBuilder(
-          future: snapshot.data[itemId],
-          builder: (context, AsyncSnapshot<ItemModel> itemSnapshot) {
-            if (!itemSnapshot.hasData) {
-              return LoadingContainer();
-            }
-
-            return buildTile(itemSnapshot.data);
-          },
-        );
+        return buildTile(snapshot.data[itemId]);
       },
     );
   }
