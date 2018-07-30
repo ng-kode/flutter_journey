@@ -29,16 +29,20 @@ class Repository {
 
   Future<ItemModel> fetchItem(int id) async {
     ItemModel item;
+    Source exactSource;
 
     for (var source in sources) {
-      item = await source.fetchItem(id);
+      exactSource = source;
+      item = await exactSource.fetchItem(id);
       if (item != null) {
         break;
       }
     }
 
     for (var cache in caches) {
-      cache.addItem(item);
+      if ((cache as Source) != exactSource) {
+        cache.addItem(item);
+      }
     }
 
     return item;
