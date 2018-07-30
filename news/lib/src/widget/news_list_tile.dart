@@ -16,11 +16,20 @@ class NewsListTile extends StatelessWidget {
     return StreamBuilder(
       stream: storiesBloc.items,
       builder: (context, AsyncSnapshot<Map> snapshot) {        
-        if (!snapshot.hasData || snapshot.data[itemId] == null) {
+        if (!snapshot.hasData) {
           return LoadingContainer();
         }
 
-        return buildTile(snapshot.data[itemId]);
+        return FutureBuilder(
+          future: snapshot.data[itemId],
+          builder: (context, itemSnapshot) {
+            if (!itemSnapshot.hasData) {
+              return LoadingContainer();
+            }
+
+            return buildTile(itemSnapshot.data);
+          }
+        );
       },
     );
   }
