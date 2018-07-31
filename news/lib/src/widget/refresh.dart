@@ -9,7 +9,6 @@ class Refresh extends StatelessWidget {
   Widget build(BuildContext context) {
     final StoriesBloc storiesBloc = StoriesProvider.of(context);
 
-
     return RefreshIndicator(
       child: child,
       onRefresh: () async {
