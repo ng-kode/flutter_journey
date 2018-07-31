@@ -10,6 +10,11 @@ class StoriesBloc {
   final _topIds = PublishSubject<List<int>>();
   final _itemsOutput = BehaviorSubject<Map<int, Future<ItemModel>>>();
   final _itemsFetcher = PublishSubject<int>();
+  dispose() {
+    _topIds.close();
+    _itemsFetcher.close();
+    _itemsOutput.close();
+  }
 
   // Getters to streams
   Observable<List<int>> get topIds => _topIds.stream;
@@ -18,22 +23,13 @@ class StoriesBloc {
   // Getters to Sinks
   Function(int) get fetchItem => _itemsFetcher.sink.add;  
 
+  // Contructor to pipe itemFetcher to itemOutput
   StoriesBloc() {
     _itemsFetcher.stream.transform(_itemsTransformer()).pipe(_itemsOutput);
   }
-  
-  fetchTopIds() async {
-    final ids = await _repo.fetchTopIds();
-    _topIds.sink.add(ids);
-  }
-
-  Future clearCache() {
-    return _repo.clearCache();
-  }
-
   _itemsTransformer() {
     return ScanStreamTransformer<int, Map<int, Future<ItemModel>>>(
-      (Map<int, Future<ItemModel>>cache, int itemId, int counter) {
+      (cache, int itemId, int counter) {
         cache[itemId] = _repo.fetchItem(itemId);
         return cache;
       },
@@ -41,9 +37,14 @@ class StoriesBloc {
     );
   }
 
-  dispose() {
-    _topIds.close();
-    _itemsFetcher.close();
-    _itemsOutput.close();
+  // Other public methods
+
+  fetchTopIds() async {
+    final ids = await _repo.fetchTopIds();
+    _topIds.sink.add(ids);
   }
+
+  Future clearCache() {
+    return _repo.clearCache();
+  }  
 }

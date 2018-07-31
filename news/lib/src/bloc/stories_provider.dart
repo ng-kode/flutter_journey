@@ -7,13 +7,13 @@ class StoriesProvider extends InheritedWidget {
 
   StoriesProvider({Key key, Widget child})
     : super(key: key, child: child);
-  
-  bool updateShouldNotify(InheritedWidget oldWidget) {
-    return true;
-  }
 
   static StoriesBloc of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(StoriesProvider) 
       as StoriesProvider).storiesBloc;
+  }
+  
+  bool updateShouldNotify(InheritedWidget oldWidget) {
+    return true;
   }
 }

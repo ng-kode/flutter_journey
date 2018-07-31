@@ -18,7 +18,7 @@ class NewsDbProvider implements Source, Cache {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
 
     // join path to point to the db file
-    final path = join(documentsDirectory.path, "items1.db");
+    final path = join(documentsDirectory.path, "items2.db");
 
     // if path exists, open the db
     // else, create one
